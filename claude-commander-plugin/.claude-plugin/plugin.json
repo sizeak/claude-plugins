@@ -1,0 +1,10 @@
+{
+  "name": "claude-commander",
+  "version": "0.1.0",
+  "description": "Skills for Claude Commander — multi-session orchestration with git worktrees and tmux.",
+  "author": {
+    "name": "Andrew Khan",
+    "email": "andrewkhan1@users.noreply.github.com"
+  },
+  "keywords": ["claude-commander", "session", "worktree", "tmux", "orchestration"]
+}
