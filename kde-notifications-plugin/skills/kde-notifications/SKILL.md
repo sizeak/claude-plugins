@@ -104,8 +104,10 @@ The scripts pass three things to `notify-send` that make Plasma treat the
 notification as coming from the Claude Code "app":
 
 - `--app-name="Claude Code"` — display name on the notification.
-- `--icon=claude-code` — the named icon installed at
-  `~/.local/share/icons/hicolor/{scalable,256x256}/apps/claude-code.{svg,png}`.
+- `--icon=claude-code` — a named icon. The source files ship with this skill at
+  `assets/claude-code.{svg,png}`; `notify.sh` copies them on first run into
+  `~/.local/share/icons/hicolor/{scalable,256x256}/apps/claude-code.{svg,png}`,
+  which is where Plasma resolves the `claude-code` name from.
 - `--hint=string:desktop-entry:claude-code` — points at
   `~/.local/share/applications/claude-code.desktop`. This is the key hint: it's
   what makes Plasma group the notification under "Claude Code", apply its icon in
