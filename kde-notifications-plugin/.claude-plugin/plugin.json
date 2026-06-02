@@ -1,0 +1,10 @@
+{
+  "name": "kde-notifications",
+  "version": "0.1.0",
+  "description": "Send KDE Plasma desktop notifications and schedule time-based reminders, branded as Claude Code. Use when the user wants to be pinged, alerted, or reminded out-of-band.",
+  "author": {
+    "name": "Simon Jackson",
+    "email": "simon.jackson@genio.co"
+  },
+  "keywords": ["kde", "plasma", "notifications", "notify-send", "reminder", "desktop"]
+}
