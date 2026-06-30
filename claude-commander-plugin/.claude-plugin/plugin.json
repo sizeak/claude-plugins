@@ -1,6 +1,6 @@
 {
   "name": "claude-commander",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skills for Claude Commander — multi-session orchestration with git worktrees and tmux.",
   "author": {
     "name": "Andrew Khan",
