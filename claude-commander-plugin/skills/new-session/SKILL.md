@@ -35,6 +35,43 @@ Example response: `Spun up session **fix-auth-bug** in plan mode.`
 
 `$1` is the user's request describing what the new session should do. Use it to determine the session name, initial prompt, mode, effort, and base branch.
 
+## Give the new session a way to report back
+
+A spawned session has **no shared context** with yours and no built-in channel back to you. If you want the child to be able to "post back" (status, results, questions) to the session that spawned it, you must tell it **who spawned it** and **how to reach it**, by embedding that in the child's `--initial-prompt`.
+
+This works because every Claude Commander session runs in a pane on one **shared tmux server**, so a child can write directly into the parent's input with `tmux send-keys`.
+
+**1. Capture your own identity first** (you are the spawning session, running inside tmux):
+
+```bash
+# Only meaningful if you are yourself inside a tmux/commander session:
+[ -n "$TMUX" ] || echo "not in tmux — skip the report-back block"
+PARENT_PANE="$TMUX_PANE"                        # e.g. %34 — globally-unique, stable send-keys target
+PARENT_TMUX="$(tmux display-message -p '#S')"   # e.g. cc-24a723c7 — human-readable session name
+```
+
+`$TMUX_PANE` is the reliable target (a pane id is unique and stable for the pane's life). The `cc-XXXXXXXX` session name is `cc-` + the first 8 chars of the Commander session id, so it also resolves with `claude-commander status <XXXXXXXX>`.
+
+**2. Append a report-back block to the child's `--initial-prompt`**, after the actual task, substituting the captured values:
+
+```
+---
+You were spawned by a parent Claude Commander session. If — and ONLY if — the user
+explicitly asks you to report or post something back to the session that spawned you,
+deliver a ONE-LINE message to the parent's input:
+
+    tmux send-keys -t <PARENT_PANE> -l '[from <your-session-title>] YOUR ONE-LINE MESSAGE'
+    tmux send-keys -t <PARENT_PANE> Enter
+
+Parent tmux pane:    <PARENT_PANE>      (e.g. %34 — use this as the send-keys target)
+Parent tmux session: <PARENT_TMUX>      (e.g. cc-24a723c7 — human-readable / maps to `claude-commander status`)
+
+Keep it to a single line, prefix it so it's recognisable, and do this ONLY on explicit
+user request — never unprompted.
+```
+
+Only include this block when you are inside tmux (`$TMUX` set). If you are not in a tmux/commander session there is nothing to post back to, so omit it.
+
 ## Examples
 
 ```bash
@@ -53,6 +90,20 @@ claude-commander new "feature-follow-up" \
 
 # Minimal — just create a session with no initial prompt
 claude-commander new "exploratory-work"
+
+# Spawn a session that can report back to you via tmux (see "Give the new session a way to report back")
+PARENT_PANE="$TMUX_PANE"                        # e.g. %34
+PARENT_TMUX="$(tmux display-message -p '#S')"   # e.g. cc-24a723c7
+claude-commander new "run-migration" \
+  --initial-prompt "Run the DB migration in db/migrations and report the outcome.
+
+---
+You were spawned by a parent Claude Commander session. If — and ONLY if — the user asks you
+to report back, deliver a one-line message to the parent's input:
+    tmux send-keys -t ${PARENT_PANE} -l '[from run-migration] MESSAGE'
+    tmux send-keys -t ${PARENT_PANE} Enter
+Parent tmux pane: ${PARENT_PANE}   Parent tmux session: ${PARENT_TMUX}
+Do this only on explicit user request — never unprompted."
 ```
 
 ## Guidelines
@@ -63,3 +114,4 @@ claude-commander new "exploratory-work"
 - Always use long-form flags (`--initial-prompt`, `--mode`, `--effort`), never short flags, to avoid ambiguity.
 - **Never spin up a new session unless the user explicitly asks you to.** Do not proactively create sessions, even if you think it would be helpful. Wait for a clear instruction like "spin up a session for this", "hand this off", or "create a new session".
 - When you do create a session, always tell the user what you're doing and why.
+- If the user wants the new session to be able to report back to you, capture `$TMUX_PANE` / `#S` and embed the report-back block in the initial prompt (see "Give the new session a way to report back"). Instruct the child to post back **only on explicit user request**, so it never spams your input unprompted.
