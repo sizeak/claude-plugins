@@ -1,0 +1,19 @@
+{
+  "name": "sizeak-plugins",
+  "owner": {
+    "name": "Simon Jackson",
+    "email": "me@sljackson.co.uk"
+  },
+  "plugins": [
+    {
+      "name": "claude-commander",
+      "source": "./claude-commander-plugin",
+      "description": "Skills for Claude Commander — multi-session orchestration with git worktrees and tmux."
+    },
+    {
+      "name": "kde-notifications",
+      "source": "./kde-notifications-plugin",
+      "description": "Send KDE Plasma desktop notifications and schedule time-based reminders, branded as Claude Code. Use when the user wants to be pinged, alerted, or reminded out-of-band."
+    }
+  ]
+}
