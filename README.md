@@ -11,7 +11,7 @@ A Claude Code plugin marketplace of general-purpose, organisation-agnostic plugi
 
 ## Plugins
 
-- **claude-commander** — Skills for [Claude Commander](https://github.com/sizeak/claude-commander): spin up, monitor, and tear down parallel Claude Code sessions backed by git worktrees and tmux.
+- **claude-commander** — Skills for [Claude Commander](https://github.com/sizeak/claude-commander): spin up, monitor, and tear down parallel Claude Code sessions backed by git worktrees and tmux, and triage their review diffs (e.g. mark import-only files reviewed).
 - **kde-notifications** — Send KDE Plasma desktop notifications and schedule time-based reminders, branded as Claude Code. Use when you want to be pinged, alerted, or reminded out-of-band.
 
 ## Adding a plugin
